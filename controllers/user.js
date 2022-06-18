@@ -1,5 +1,5 @@
 const sqlConn = require('../databases/db');
-const crypto = require
+const crypto = require('crypto');
 
 module.exports = {
   login: (req, res) => {
@@ -22,20 +22,18 @@ module.exports = {
   },
   
   auth: async (req, res) => {
+
     let username = req.body.username;
     let password = req.body.password;
-    //let hashed_pass = crpto.md5(pass)
-    const result = await sqlConn.promise().query(`SELECT * from accounts where username = '${username}' and password = '${password}'`)
-    //console.log("here result");
-    //console.log(result[0][0]['password']);
-    // console.log(req.body);
+    var hash = crypto.createHash('sha512')
+    let password1 = hash.update(password, "utf-8")
+    password = password1.digest('hex')
+    const result = await sqlConn.promise().query(`SELECT * from accounts where username = '${username}' and password = '${password}'`);
     let signup = req.body.signup;
     if(signup==="Sign Up"){
-      //let hashed_pass = crpto.md5(pass)
-      const result2 = await sqlConn.promise().query(`SELECT * from accounts where username = '${username}'`)
-      
+      const result2 = await sqlConn.promise().query(`SELECT * from accounts where username = '${username}'`);
       //console.log(result[0][0]['password']);
-  
+
       if (result2[0][0]){
         console.log("this username already exists");
         res.render('user_taken')
