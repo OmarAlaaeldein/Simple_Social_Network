@@ -1,8 +1,33 @@
 const sqlConn = require('../databases/db');
 const crypto = require('crypto');
-
+let globuser='';
 module.exports = {
   login: (req, res) => {
+    var cookie = req.cookies.loggedin;
+    console.log(globuser);
+    if(cookie === undefined){
+      res.render('login')
+    }
+    else{
+      res.redirect('./~')
+    }
+  },
+
+  // hello: (req, res) => {
+  //   let username = req.cookies.username;
+  //   let results= req.cookies.results;
+
+  //   res.render('hello',{username,results})
+  // },
+  
+  
+  logout: (req, res) => {
+    let options = {
+      maxAge: 1000 * 60 * 2/1000,
+      httpOnly: true
+    }
+    res.cookie("loggedin", "false", options);
+    if(!globuser)globuser='';
     var cookie = req.cookies.loggedin;
     if(cookie === undefined){
       res.render('login')
@@ -11,11 +36,20 @@ module.exports = {
       res.redirect('./~')
     }
   },
-  
+
+
+
+
   getPage: (req, res) => {
     let username = req.body.username;
     let results= ' ';
+    if (username!=undefined && username!='')
+      globuser=username;
+    console.log(globuser);
+    // console.log('username:',username,'.')
     if(req.cookies.loggedin == "true") {
+      if(!username)username=globuser;
+        
         res.render('hello', {username,results})
     }
     res.redirect('./login');
@@ -25,11 +59,19 @@ module.exports = {
 
     let username = req.body.username;
     let password = req.body.password;
+
+    
+    if (username!=undefined && username!='')
+      globuser=username;
+    
+    if(!username)username=globuser;
     var hash = crypto.createHash('sha512')
     let password1 = hash.update(password, "utf-8")
     password = password1.digest('hex')
     const result = await sqlConn.promise().query(`SELECT * from accounts where username = '${username}' and password = '${password}'`);
     let signup = req.body.signup;
+
+
     if(signup==="Sign Up"){
       const result2 = await sqlConn.promise().query(`SELECT * from accounts where username = '${username}'`);
       //console.log(result[0][0]['password']);
@@ -53,7 +95,7 @@ module.exports = {
       if (result[0][0]){
         if(username && password && result[0][0]['password'] === password){
           let options = {
-            maxAge: 1000 * 60 * 2 /1000,
+            maxAge: 1000 * 60 * 2,
             httpOnly: true
           }
           if(!req.cookie)
@@ -70,5 +112,7 @@ module.exports = {
         res.render('wrong_creds')
       }
     }
-  }
+  },
+
+
 }
