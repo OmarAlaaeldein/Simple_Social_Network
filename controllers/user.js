@@ -13,12 +13,12 @@ module.exports = {
     }
   },
 
-  // hello: (req, res) => {
-  //   let username = req.cookies.username;
-  //   let results= req.cookies.results;
-
-  //   res.render('hello',{username,results})
-  // },
+  hello: (req, res) => {
+    let username='';
+    let results='';
+    if(!username)username=globuser;
+    res.render('hello',{username,results})
+  },
   
   
   logout: (req, res) => {
