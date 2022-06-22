@@ -8,17 +8,16 @@
     <h2>Hello, <%=username%>! <%=results%> </h2>
 	<div>
 <form name="post" method="POST" action="/newpost">
-        <input type="email" name="email" placeholder="Enter email">
         <label for="post">Post:</label>
-    <input type="text" name="post_text" id="post_text" placeholder="Wasaaap" />
+    <input type="text" name="post_text" id="post_text" placeholder="Wazaaaaa" />
     <input type="submit" value="New Post" name="post"/>
     </form>
     
 </div>
 <div>
-<form name="follow" method="POST" action="/follow"> 
-    <label for="follow">follow:</label>
-    <input type="text" name="followee_name" id="followee_name" placeholder="What's the user name?" />
+<form name="Follow" method="POST" action="/follow"> 
+    <label for="Follow">Follow:</label>
+    <input type="text" name="followee_name" id="followee_name" placeholder="What's the user's name?" />
     <input type="submit" value="Follow" name="follow"/>
 </form>
 </div>
