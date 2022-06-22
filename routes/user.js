@@ -11,4 +11,5 @@ router.get('/logout',userController.logout)
 router.post('/auth', userController.auth);
 router.post('/newpost', userController.newpost);
 router.post('/follow', userController.follow);
+router.post('/unfollow', userController.unfollow);
 module.exports = router
