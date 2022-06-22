@@ -37,9 +37,6 @@ module.exports = {
     }
   },
 
-
-
-
   getPage: (req, res) => {
     let username = req.body.username;
     let results= ' ';
@@ -55,6 +52,18 @@ module.exports = {
     res.redirect('./login');
   },
   
+  newpost: (req, res) => {
+    let options = {
+      maxAge: 1000 * 60 * 2/1000,
+      httpOnly: true
+    }
+    var results='';
+    var post_text=req.body.post_text;
+    var username=globuser;
+    sqlConn.promise().query(`insert into posts (username, post) values ('${globuser}' ,'${post_text}');`);
+    res.render('hello',{username,results})
+    },
+
   auth: async (req, res) => {
 
     let username = req.body.username;

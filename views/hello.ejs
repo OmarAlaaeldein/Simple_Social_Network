@@ -7,6 +7,9 @@
      height="50"/>
     <h2>Hello, <%=username%>! <%=results%> </h2>
 
-  
+    <form action="/newpost" method="POST">  
+    <label for="post">Post:</label>
+    <input type="text" name="post_text" id="post_text" placeholder="Wasaaap" />
+    <input type="submit" value="New Post" name="post"/>
   </body>
 </html>
