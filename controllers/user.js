@@ -75,7 +75,7 @@ module.exports = {
       console.log(globuser,'followed',followee_name);
       res.render('hello',{username,results})
       },
-    unfollow: (req, res) => {
+  unfollow: (req, res) => {
       let options = {
         maxAge: 1000 * 60 * 2/1000,
         httpOnly: true
@@ -86,6 +86,16 @@ module.exports = {
       sqlConn.promise().query(`DELETE FROM followers WHERE username=('${globuser}') and follow=('${followee_name}');`);
       console.log(globuser,'unfollowed',followee_name);
       res.render('hello',{username,results})
+      },
+  friends: (req, res) => {
+      let options = {
+        maxAge: 1000 * 60 * 2/1000,
+        httpOnly: true
+      }
+      var username=globuser;
+      const result = sqlConn.promise().query(`SELECT follow from followers where username = '${username}'`);
+      console.log(globuser,'friends are',result);
+      res.render('friends',{username,result})
       },
   auth: async (req, res) => {
 
@@ -100,7 +110,7 @@ module.exports = {
     var hash = crypto.createHash('sha512')
     let password1 = hash.update(password, "utf-8")
     password = password1.digest('hex')
-    const result = await sqlConn.promise().query(`SELECT * from accounts where username = '${username}' and password = '${password}'`);
+    const result =await sqlConn.promise().query(`SELECT * from accounts where username = '${username}' and password = '${password}'`);
     let signup = req.body.signup;
 
 
