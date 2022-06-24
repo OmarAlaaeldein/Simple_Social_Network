@@ -25,7 +25,7 @@ module.exports = {
     if(!username)username=globuser;
     
     let my_posts=['My Posts:'];
-    const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
+    const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username in (SELECT follow from followers where username='${username}') or username='${username}' order by datetime DESC`);
     // console.log(my_fetched_posts);
     for (let i = 0; i < my_fetched_posts[0].length; i++) {
       my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
@@ -62,7 +62,7 @@ module.exports = {
     if(req.cookies.loggedin == "true") {
       if(!username)username=globuser;
         let my_posts=['My Posts:'];
-        const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
+        const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username in (SELECT follow from followers where username='${username}') or username='${username}' order by datetime DESC`);
         for (let i = 0; i < my_fetched_posts[0].length; i++) {
           my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
         }
