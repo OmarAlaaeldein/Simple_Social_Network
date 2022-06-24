@@ -1,0 +1,27 @@
+<html>
+      <head>
+      </head>
+    <body>
+
+          <%- include('header.ejs') %>
+          <img src="1.png" width="50" height="50"/>
+          <h2>
+            This is user <%=username%>! <%=results%> 
+          </h2>
+          
+          <h2>
+            <% for(var i=0; i<1; i++) {%>
+               <%= visit_posts[i] %>
+               <br>
+            <% } %>
+          </h2>
+
+          <ul>
+            <% for(var i=1; i<visit_posts.length; i++) {%>
+               <li><%= visit_posts[i] %></li>
+               <br>
+            <% } %>
+          </ul>
+
+    </body>
+</html>

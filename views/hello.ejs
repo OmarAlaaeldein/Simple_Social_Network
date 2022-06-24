@@ -1,32 +1,81 @@
 <html>
-  <head>
-  </head>
-  <body>
-    <%- include('header.ejs') %>
-    <img src="1.png" width="50" 
-     height="50"/>
-    <h2>Hello, <%=username%>! <%=results%> </h2>
-	<div>
-<form name="post" method="POST" action="/newpost">
-        <label for="post">Post:</label>
-    <input type="text" name="post_text" id="post_text" placeholder="Wasaaap" />
-    <input type="submit" value="New Post" name="post"/>
-    </form>
-    
-</div>
-<div>
-<form name="follow" method="POST" action="/follow"> 
-    <label for="follow">Follow:</label>
-    <input type="text" name="followee_name" id="followee_name" placeholder="What's the user's name?" />
-    <input type="submit" value="Follow" name="follow"/>
-</form>
-</div>
-<div>
-<form name="unfollow" method="POST" action="/unfollow"> 
-    <label for="unfollow">Unfollow:</label>
-    <input type="text" name="followee_name" id="followee_name" placeholder="What's the user's name?" />
-    <input type="submit" value="Unfollow" name="unfollow"/>
-</form>
-</div>
-  </body>
+      <head>
+      </head>
+      <body>
+
+          <%- include('header.ejs') %>
+          <img src="1.png" width="50" height="50"/>
+          <h2>
+            Hello, <%=username%>! <%=results%> 
+          </h2>
+
+          <div>
+              <form name="post" method="POST" action="/newpost">
+                      <label for="post">Post:</label>
+                  <input type="text" name="post_text" id="post_text" placeholder="Wasaaap" />
+                  <input type="submit" value="New Post" name="post"/>
+              </form>    
+          </div>
+
+          <div>
+              <form name="follow" method="POST" action="/follow"> 
+                  <label for="follow">Follow:</label>
+                  <input type="text" name="followee_name" id="followee_name" placeholder="What's the user's name?" />
+                  <input type="submit" value="Follow" name="follow"/>
+              </form>
+          </div>
+
+          <div>
+              <form name="unfollow" method="POST" action="/unfollow"> 
+                  <label for="unfollow">Unfollow:</label>
+                  <input type="text" name="followee_name" id="followee_name" placeholder="What's the user's name?" />
+                  <input type="submit" value="Unfollow" name="unfollow"/>
+              </form>
+          </div>
+
+          <div>
+              <form name="search" method="POST" action="/search"> 
+                  <label for="search">Search:</label>
+                  <input type="text" name="username" id="username" placeholder="username" />
+                  <input type="submit" value="search" name="Search"/>
+              </form>
+          </div>
+            
+          <h3>
+            <% for(var i=0; i<1; i++) {%>
+               <%= search_results[i] %>
+            <% } %>
+          </h3>
+
+          <ul>
+            <% for(var i=1; i<search_results.length; i++) {%>
+               <li><%= search_results[i] %></li>
+               <br>
+            <% } %>
+          </ul>
+
+
+          <div>
+            <form name="visit" method="POST" action="/visit"> 
+                <label for="visit">Visit:</label>
+                <input type="text" name="visit" id="visit" placeholder="visit" />
+                <input type="submit" value="visit" name="Visit"/>
+            </form>
+        </div>
+
+        <h2>
+          <% for(var i=0; i<1; i++) {%>
+             <%= my_posts[i] %>
+             <br>
+          <% } %>
+        </h2>
+
+        <ul>
+          <% for(var i=1; i<my_posts.length; i++) {%>
+             <li><%= my_posts[i] %></li>
+             <br>
+          <% } %>
+        </ul>
+
+    </body>
 </html>
