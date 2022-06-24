@@ -4,6 +4,7 @@ let globuser='';
 let search_results=[];
 let my_posts=['My Posts:'];
 let visit_posts=['Posts:'];
+let visitname='';             // the visited user 
 
 
 module.exports = {
@@ -79,16 +80,18 @@ module.exports = {
     // res.render('hello',{username,results,search_results,my_posts})
     res.redirect('./hello');
     },
+
+
+
+
   follow: async (req, res) => {
       
       var results='';
       var followee_name=req.body.followee_name;
       var username=globuser;
       
-      const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${followee_name}';`);
+      const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${followee_name}';`);  
       if(result[0].length!=0){
-        // console.log(fetched_posts[0]);
-        // console.log(result[0])
         sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}');`);
         console.log(globuser,'followed',followee_name);
         res.redirect('./hello');
@@ -96,8 +99,7 @@ module.exports = {
       else{
         res.render('user_doesnt_exist');
       }
-      // res.render('hello',{username,results,search_results,my_posts}
-      
+
       },
   unfollow: (req, res) => {
       
@@ -106,9 +108,42 @@ module.exports = {
       var username=globuser;
       sqlConn.promise().query(`DELETE FROM followers WHERE username=('${globuser}') and follow=('${followee_name}');`);
       console.log(globuser,'unfollowed',followee_name);
-      // res.render('hello',{username,results,search_results,my_posts})
       res.redirect('./hello');
       },
+
+
+
+  followuser: async (req, res) => {     // follow button inside random user's page
+  
+    const result = await sqlConn.promise().query(`SELECT username from followers where username = '${visitname}';`);  
+
+    if(result[0].length===0){
+      await sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${visitname}');`);
+      
+    }
+
+    username=visitname;
+    let results='';
+    res.render('person',{username,results,visit_posts})
+
+    },
+  unfollowuser: async (req, res) => {
+    
+    
+    try{  await sqlConn.promise().query(`DELETE FROM followers WHERE username=('${globuser}') and follow=('${visitname}');`);}
+    catch(err){console.log('');}
+    
+
+    username=visitname;
+    let results='';
+    res.render('person',{username,results,visit_posts})
+    },
+
+    
+
+
+
+
   friends: async (req, res) => {
       var username=globuser;
       var title='These are your friends, ';
@@ -148,7 +183,10 @@ module.exports = {
     res.render('myprofile',{username,my_posts,result});
     },
   visit: async (req, res) => {
-    var name=req.body.visit;
+    try{visitname=req.body.visit;}
+    catch(err){console.log('');}
+
+    var name = visitname;
     var username=name;
     var results='';
     
@@ -159,10 +197,8 @@ module.exports = {
     
 
 
-
+    visit_posts=['Posts:'];
     if(result[0].length!=0){
-      // console.log(fetched_posts[0]);
-      console.log(result[0])
       for (let i = 0; i < fetched_posts[0].length; i++) {
 
         visit_posts.push(fetched_posts[0][i]['datetime']+', '+fetched_posts[0][i]['username']+':   '+fetched_posts[0][i]['post']);
@@ -174,7 +210,7 @@ module.exports = {
       else{
         res.render('user_doesnt_exist')
       }
-      visit_posts=['Posts:']
+      
     },
 
 
