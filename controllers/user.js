@@ -1,5 +1,6 @@
 const sqlConn = require('../databases/db');
 const crypto = require('crypto');
+const { use } = require('../routes/user');
 let globuser='';
 let search_results=[];
 let my_posts=['My Posts:'];
@@ -24,9 +25,10 @@ module.exports = {
     if(!username)username=globuser;
     
     let my_posts=['My Posts:'];
-    const my_fetched_posts = await sqlConn.promise().query(`SELECT post from posts where username = '${username}'`);
+    const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
+    // console.log(my_fetched_posts);
     for (let i = 0; i < my_fetched_posts[0].length; i++) {
-      my_posts.push(my_fetched_posts[0][i]['post']);
+      my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
     }
     
     res.render('hello',{username,results,search_results,my_posts})
@@ -60,9 +62,9 @@ module.exports = {
     if(req.cookies.loggedin == "true") {
       if(!username)username=globuser;
         let my_posts=['My Posts:'];
-        const my_fetched_posts = await sqlConn.promise().query(`SELECT post from posts where username = '${username}'`);
+        const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
         for (let i = 0; i < my_fetched_posts[0].length; i++) {
-          my_posts.push(my_fetched_posts[0][i]['post']);
+          my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
         }
         res.render('hello', {username,results,search_results,my_posts})
     }
@@ -74,7 +76,7 @@ module.exports = {
     var results='';
     var post_text=req.body.post_text;
     var username=globuser;
-    sqlConn.promise().query(`insert into posts (username, post) values ('${globuser}' ,'${post_text}');`);
+    sqlConn.promise().query(`insert into posts (username, post, datetime) values ('${globuser}' ,'${post_text}',NOW());`);
     // res.render('hello',{username,results,search_results,my_posts})
     res.redirect('./hello');
     },
@@ -134,7 +136,7 @@ module.exports = {
     const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${name}'`);
     
     // console.log(result)
-    const fetched_posts = await sqlConn.promise().query(`SELECT post from posts where username = '${name}'`);
+    const fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${name}' order by datetime DESC`);
     
 
 
@@ -142,7 +144,7 @@ module.exports = {
     if(result){
       // console.log(fetched_posts[0]);
       for (let i = 0; i < fetched_posts[0].length; i++) {
-        visit_posts.push(fetched_posts[0][i]['post']);
+        visit_posts.push(fetched_posts[0][i]['datetime']+', '+fetched_posts[0][i]['username']+':   '+fetched_posts[0][i]['post']);
       }
 
 
