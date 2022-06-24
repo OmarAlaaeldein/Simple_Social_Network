@@ -93,10 +93,12 @@ module.exports = {
       const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${followee_name}';`);  
       const result2 = await sqlConn.promise().query(`SELECT * from followers where username = '${globuser}' and follow='${followee_name}';`);
       var check_dup=result2[0][0];
+      try{
       if (check_dup['username']==globuser &&check_dup['follow']==followee_name){
         res.render('./cant_follow_followed')
       }
-      else{
+    }
+    catch{
       if(result[0].length!=0){
         (await sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}');`));
         console.log(globuser,'followed',followee_name);
@@ -106,7 +108,7 @@ module.exports = {
         res.render('user_doesnt_exist');
       }
       }
-      },
+    },
   unfollow: async (req, res) => {
       
       var results='';
