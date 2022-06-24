@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <!-- <link rel="stylesheet" href="../public/friends.css"> -->
+  </head>
+  <style>
+    .friend-comp{
+    background: linear-gradient(rgb(241, 240, 240), rgb(200,200,200));
+    padding: 10px;
+    margin: 15px;
+    border-radius: 12px;
+    box-shadow: 5px 5px 5px rgb(233, 233, 233);
+    transition: 0.3s ease;
+    background: linear-gradient(rgb(241, 240, 240), rgb(235, 233, 233));
+    }
+    .friend-comp:hover{
+    box-shadow: 8px 8px 8px rgb(184, 184, 184);
+    }
+  </style>
+  <body>
+    <%- include('header.ejs') %>
+    <img src="1.png" width="50" 
+     height="50"/>
+    <h2><%=title%><%=username%>!</h2>
+        <div class="friend-comp">
+                <% for(var i=0; i<result[0].length ; i++){ %>
+                    <div class="friend-comp">
+                        <a href="/user/<%= result[0][i]['follow'] %>"><%= result[0][i]['follow'] %></a> 
+                    </div>
+                <% } %>
+        </div>
+  </body>
+</html>

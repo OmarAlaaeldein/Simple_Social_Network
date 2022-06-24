@@ -8,11 +8,13 @@ app.use(express.urlencoded({ extended: true }));
 app.use( express.static( "public" ) );
 
 const userRoute = require ('./routes/user');
+// const friendsRoute = require('./routes/friends');
+
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 app.use(userRoute);
-
+// app.use('/friends', friendsRoute);
 
 app.listen('8000', () => {
     console.log('Listening to port 8000..');

@@ -87,15 +87,16 @@ module.exports = {
       console.log(globuser,'unfollowed',followee_name);
       res.render('hello',{username,results})
       },
-  friends: (req, res) => {
+  friends: async (req, res) => {
       let options = {
         maxAge: 1000 * 60 * 2/1000,
         httpOnly: true
       }
       var username=globuser;
-      const result = sqlConn.promise().query(`SELECT follow from followers where username = '${username}'`);
-      console.log(globuser,'friends are',result);
-      res.render('friends',{username,result})
+      var title='These are your friends, ';
+      const result = await sqlConn.promise().query(`SELECT follow from followers where username = '${username}'`);
+      console.log(globuser+"'s friends are",result[0]);
+      res.render('friends',{username,title,result})
       },
   auth: async (req, res) => {
 

@@ -13,4 +13,5 @@ router.post('/newpost', userController.newpost);
 router.post('/follow', userController.follow);
 router.post('/unfollow', userController.unfollow);
 router.get('/unfollow', userController.unfollow);
+router.get('/friends', userController.friends);
 module.exports = router
