@@ -115,9 +115,10 @@ module.exports = {
   followuser: async (req, res) => {     // follow button inside random user's page
   
     const result = await sqlConn.promise().query(`SELECT username from followers where username = '${visitname}';`);  
+    console.log(result[0])
 
     if(result[0].length===0){
-      await sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${visitname}');`);
+      await sqlConn.promise().query(`insert into followers WHERE username=('${globuser}') and follow=('${visitname}');`);
       
     }
 
@@ -146,7 +147,7 @@ module.exports = {
   friends: async (req, res) => {
       var username=globuser;
       var title='These are your friends, ';
-      const result = await sqlConn.promise().query(`select Distinct a.follow from followers a,followers b where a.username='${username}' and '${username}'=b.follow and a.follow=b.username and a.username!=a.follow`);
+      const result = await sqlConn.promise().query(`select a.follow from followers a,followers b where a.username='${username}' and '${username}'=b.follow and a.follow=b.username and a.username!=a.follow`);
       console.log(globuser+"'s friends are",result[0]);
       res.render('friends',{username,title,result})
       },
@@ -174,7 +175,7 @@ module.exports = {
     var username = globuser;
     let my_posts=['My Posts:'];
     const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
-    const result = await sqlConn.promise().query(`select Distinct a.follow from followers a,followers b where a.username='${username}' and '${username}'=b.follow and a.follow=b.username and a.username!=a.follow`);
+    const result = await sqlConn.promise().query(`select a.follow from followers a,followers b where a.username='${username}' and '${username}'=b.follow and a.follow=b.username and a.username!=a.follow`);
     // console.log(my_fetched_posts);
     for (let i = 0; i < my_fetched_posts[0].length; i++) {
       my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
