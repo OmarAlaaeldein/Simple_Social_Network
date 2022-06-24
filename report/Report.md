@@ -13,8 +13,10 @@ output:
 
 # ER Diagram
 
+
 ![ER Diagram](er.png)
 \
+
 
 ---
 
@@ -49,13 +51,18 @@ output:
     ```
     localhost:8000
     ```
+----
 
 # Test Cases
 
 ### Sign up
 
+
 ![A new user is created](signup.png)
 \
+
+------
+
 
 ### Hashing the user's password
 
