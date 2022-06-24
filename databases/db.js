@@ -4,7 +4,7 @@ const config = {
   host: 'localhost',
   user: 'root',
   password: 'password',
-  database: 'network'
+  database: 'network_mayo'
 };
 
 const conn = mysql.createConnection(config);
