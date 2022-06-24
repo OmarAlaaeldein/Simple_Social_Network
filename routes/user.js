@@ -12,9 +12,9 @@ router.post('/auth', userController.auth);
 router.post('/newpost', userController.newpost);
 router.post('/follow', userController.follow);
 router.post('/unfollow', userController.unfollow);
-router.get('/unfollow', userController.unfollow);
 router.get('/friends', userController.friends);
-// router.get('/unfollow', userController.unfollow);
 router.post('/search', userController.search);
 router.post('/visit', userController.visit);
+router.post('/followuser', userController.followuser);
+router.post('/unfollowuser', userController.unfollowuser);
 module.exports = router

@@ -9,6 +9,19 @@
             This is user <%=username%>! <%=results%> 
           </h2>
           
+          <br>
+
+          <div>
+            <form name="follow" method="POST" action="/followuser"> 
+                <input type="submit" value="Follow" name="followuser"/>
+            </form>
+            <form name="unfollow" method="POST" action="/unfollowuser"> 
+              <input type="submit" value="Unfollow" name="unfollowuser"/>
+          </form>
+        </div>
+
+        
+
           <h2>
             <% for(var i=0; i<1; i++) {%>
                <%= visit_posts[i] %>
