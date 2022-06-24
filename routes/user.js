@@ -17,5 +17,5 @@ router.post('/search', userController.search);
 router.post('/visit', userController.visit);
 router.get('/myprofile', userController.profile);
 router.post('/followuser', userController.followuser);
-router.post('/unfollowuser', userController.unfollowuser);
+router.post('/unfollowuser', userController.unfollowuser);   
 module.exports = router

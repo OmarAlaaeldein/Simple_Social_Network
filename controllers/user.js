@@ -51,7 +51,6 @@ module.exports = {
       res.redirect('./~')
     }
   },
-
   getPage: async (req, res) => {
     let username = req.body.username;
     let results= ' ';
@@ -274,6 +273,4 @@ module.exports = {
       }
     }
   },
-
-
 }
