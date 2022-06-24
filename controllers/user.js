@@ -2,10 +2,10 @@ const sqlConn = require('../databases/db');
 const crypto = require('crypto');
 let globuser='';
 let search_results=[];
-let my_posts=['My Posts:'];
+let my_posts=['Posts:'];
 let visit_posts=['Posts:'];
 let visitname='';             // the visited user 
-
+let notif=0;
 
 module.exports = {
   login: (req, res) => {
@@ -24,6 +24,17 @@ module.exports = {
     let results='';
     if(!username)username=globuser;
     
+
+    const xx = await sqlConn.promise().query(`select a.follow from followers a,followers b where a.username='${globuser}' and '${globuser}'=b.follow and a.follow=b.username and a.username!=a.follow`);
+    const xxx = await sqlConn.promise().query(`select distinct username from followers where follow='${globuser}' and follow not in (select a.follow from followers a,followers b where a.username='${globuser}' and '${globuser}'=b.follow and a.follow=b.username and a.username!=a.follow)`);
+    
+    let xx2=[]
+    let xxx2=[]
+    for (let i = 0; i < xx[0].length; i++){xx2.push(xx[0][i]['follow'])}
+    for (let i = 0; i < xxx[0].length; i++){xxx2.push(xxx[0][i]['username'])}
+    
+    for (let i = 0; i < xxx2.length; i++) {if(!(xx2.includes(xxx2[i]))){notif++;}}
+
     let my_posts=['My Posts:'];
     const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username in (SELECT follow from followers where username='${username}') or username='${username}' order by datetime DESC`);
     // console.log(my_fetched_posts);
@@ -31,8 +42,9 @@ module.exports = {
       my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
     }
     
-    res.render('hello',{username,results,search_results,my_posts})
+    res.render('hello',{username,results,search_results,my_posts,notif})
     search_results=[];
+
   },
   
   
@@ -51,14 +63,12 @@ module.exports = {
       res.redirect('./~')
     }
   },
-
   getPage: async (req, res) => {
     let username = req.body.username;
     let results= ' ';
     if (username!=undefined && username!='')
       globuser=username;
-    console.log(globuser);
-    // console.log('username:',username,'.')
+    console.log(globuser);    
     if(req.cookies.loggedin == "true") {
       if(!username)username=globuser;
         let my_posts=['My Posts:'];
@@ -66,7 +76,7 @@ module.exports = {
         for (let i = 0; i < my_fetched_posts[0].length; i++) {
           my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
         }
-        res.render('hello', {username,results,search_results,my_posts})
+        res.render('hello', {username,results,search_results,my_posts,notif})
     }
     res.redirect('./login');
   },
@@ -77,7 +87,6 @@ module.exports = {
     var post_text=req.body.post_text;
     var username=globuser;
     sqlConn.promise().query(`insert into posts (username, post, datetime) values ('${globuser}' ,'${post_text}',NOW());`);
-    // res.render('hello',{username,results,search_results,my_posts})
     res.redirect('./hello');
     },
 
@@ -131,15 +140,16 @@ module.exports = {
   followuser: async (req, res) => {     // follow button inside random user's page
   
     const result = await sqlConn.promise().query(`SELECT username from followers where username = '${visitname}';`);  
+    console.log(result[0])
 
     if(result[0].length===0){
-      await sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${visitname}');`);
+      await sqlConn.promise().query(`insert into followers WHERE username=('${globuser}') and follow=('${visitname}');`);
       
     }
 
     username=visitname;
     let results='';
-    res.render('person',{username,results,visit_posts})
+    res.render('person',{username,results,visit_posts,notif})
 
     },
   unfollowuser: async (req, res) => {
@@ -151,7 +161,7 @@ module.exports = {
 
     username=visitname;
     let results='';
-    res.render('person',{username,results,visit_posts})
+    res.render('person',{username,results,visit_posts,notif})
     },
 
     
@@ -182,7 +192,7 @@ module.exports = {
     }
 
     console.log(search_results)
-    // res.render('hello',{username,results,search_results,my_posts})
+    // res.render('hello',{username,results,search_results,my_posts,notif})
     res.redirect('./hello');
     
     },
@@ -220,7 +230,7 @@ module.exports = {
       }
 
 
-      res.render('person',{username,results,visit_posts})
+      res.render('person',{username,results,visit_posts,notif})
       }
       else{
         res.render('user_doesnt_exist')
@@ -259,7 +269,7 @@ module.exports = {
         sqlConn.promise().query(`insert into accounts (username, password) values ('${username}' ,'${password}');`)
         console.log("new user added");
         results='\nwelcome new user'
-        // res.render('hello', {username,results,search_results,my_posts})
+        
         res.redirect('./hello');
         
       }
@@ -277,7 +287,7 @@ module.exports = {
           res.cookie("loggedin", "true", options);
           let username = req.body.username;
           let results= ' ';
-          // res.render('hello', {username,results,search_results,my_posts})
+          
           res.redirect('./hello');
         }else{
           
@@ -289,6 +299,4 @@ module.exports = {
       }
     }
   },
-
-
 }

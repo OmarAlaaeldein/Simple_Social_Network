@@ -1,12 +1,30 @@
 <html>
       <head>
       </head>
+      <style>
+        .friend-comp{
+        background: linear-gradient(rgb(241, 240, 240), rgb(200,200,200));
+        padding: 10px;
+        margin: 15px;
+        border-radius: 12px;
+        box-shadow: 5px 5px 5px rgb(233, 233, 233);
+        transition: 0.3s ease;
+        background: linear-gradient(rgb(241, 240, 240), rgb(235, 233, 233));
+        }
+        .friend-comp:hover{
+        box-shadow: 8px 8px 8px rgb(184, 184, 184);
+        }
+        .text{
+        font-size:      40px;
+        font-weight:    bold;
+        }
+      </style>
     <body>
 
           <%- include('header.ejs') %>
           <img src="1.png" width="50" height="50"/>
           <h2>
-            This is user <%=username%>! <%=results%> 
+            This is user <%=username%>!
           </h2>
           
           <br>
@@ -22,7 +40,7 @@
 
         
 
-          <h2>
+        <div class="friend-comp"><h2>
             <% for(var i=0; i<1; i++) {%>
                <%= visit_posts[i] %>
                <br>
@@ -35,6 +53,7 @@
                <br>
             <% } %>
           </ul>
+        </div>
 
     </body>
 </html>
