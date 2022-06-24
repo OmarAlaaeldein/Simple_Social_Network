@@ -90,7 +90,16 @@ module.exports = {
       var username=globuser;
       
       const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${followee_name}';`);  
+      const result2 = await sqlConn.promise().query(`SELECT * from followers where username = '${globuser}' and follow='${followee_name}';`);
+      var check_dup=result2[0][0];
+      try{
+      if (check_dup['username']==globuser &&check_dup['follow']==followee_name){
+        res.render('./cant_follow_followed')
+      }
+    }
+    catch{
       if(result[0].length!=0){
+        (await sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}');`));
         sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}');`);
         console.log(globuser,'followed',followee_name);
         res.redirect('./hello');
@@ -98,18 +107,24 @@ module.exports = {
       else{
         res.render('user_doesnt_exist');
       }
-
-      },
+      }
+    },
   unfollow: (req, res) => {
       
       var results='';
       var followee_name=req.body.followee_name;
       var username=globuser;
+      const result2 = sqlConn.promise().query(`SELECT * from followers where username = '${globuser}' and follow='${followee_name}';`);
+      var check_dup=result2[0];
+      if(check_dup===undefined){
+        res.render('./cant_unfollow_unfollowed')
+      }
+      else{
       sqlConn.promise().query(`DELETE FROM followers WHERE username=('${globuser}') and follow=('${followee_name}');`);
       console.log(globuser,'unfollowed',followee_name);
       res.redirect('./hello');
+      }
       },
-
 
 
   followuser: async (req, res) => {     // follow button inside random user's page
