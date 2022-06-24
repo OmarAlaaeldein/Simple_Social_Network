@@ -12,11 +12,6 @@ CREATE TABLE posts(
 );
 CREATE TABLE followers(
    username   varchar(255)              NOT NULL,
-   follow varchar(255)     NOT NULL
+   follow varchar(255)     NOT NULL,
+   primary key (username,follow)
 );
-
-CREATE TABLE friends(
-   username   varchar(255)              NOT NULL,
-   friend varchar(255)     NOT NULL
-);
-

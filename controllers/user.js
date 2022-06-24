@@ -25,7 +25,7 @@ module.exports = {
     if(!username)username=globuser;
     
     let my_posts=['My Posts:'];
-    const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username in (SELECT follow from followers where username='${username}') order by datetime DESC`);
+    const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username in (SELECT follow from followers where username='${username}') or username='${username}' order by datetime DESC`);
     // console.log(my_fetched_posts);
     for (let i = 0; i < my_fetched_posts[0].length; i++) {
       my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
@@ -61,7 +61,7 @@ module.exports = {
     if(req.cookies.loggedin == "true") {
       if(!username)username=globuser;
         let my_posts=['My Posts:'];
-        const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username in (SELECT follow from followers where username='${username}') order by datetime DESC`);
+        const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username in (SELECT follow from followers where username='${username}') or username='${username}' order by datetime DESC`);
         for (let i = 0; i < my_fetched_posts[0].length; i++) {
           my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
         }
@@ -146,7 +146,7 @@ module.exports = {
   friends: async (req, res) => {
       var username=globuser;
       var title='These are your friends, ';
-      const result = await sqlConn.promise().query(`SELECT follow from followers where username = '${username}'`);
+      const result = await sqlConn.promise().query(`select a.follow from followers a,followers b where a.username='${username}' and '${username}'=b.follow and a.follow=b.username and a.username!=a.follow`);
       console.log(globuser+"'s friends are",result[0]);
       res.render('friends',{username,title,result})
       },
@@ -174,7 +174,7 @@ module.exports = {
     var username = globuser;
     let my_posts=['My Posts:'];
     const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
-    const result = await sqlConn.promise().query(`SELECT follow from followers where username = '${username}'`);
+    const result = await sqlConn.promise().query(`select a.follow from followers a,followers b where a.username='${username}' and '${username}'=b.follow and a.follow=b.username and a.username!=a.follow`);
     // console.log(my_fetched_posts);
     for (let i = 0; i < my_fetched_posts[0].length; i++) {
       my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
