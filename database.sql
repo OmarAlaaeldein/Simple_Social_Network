@@ -15,3 +15,8 @@ CREATE TABLE followers(
    follow varchar(255)     NOT NULL
 );
 
+CREATE TABLE friends(
+   username   varchar(255)              NOT NULL,
+   friend varchar(255)     NOT NULL
+);
+
