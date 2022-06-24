@@ -84,7 +84,7 @@ module.exports = {
       var results='';
       var followee_name=req.body.followee_name;
       var username=globuser;
-      sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}');`);
+      sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}'), where;`);
       console.log(globuser,'followed',followee_name);
       // res.render('hello',{username,results,search_results,my_posts}
       res.redirect('./hello');
@@ -140,8 +140,9 @@ module.exports = {
 
 
 
-    if(result){
+    if(result[0].length!=0){
       // console.log(fetched_posts[0]);
+      console.log(result[0])
       for (let i = 0; i < fetched_posts[0].length; i++) {
 
         visit_posts.push(fetched_posts[0][i]['datetime']+', '+fetched_posts[0][i]['username']+':   '+fetched_posts[0][i]['post']);
@@ -149,6 +150,9 @@ module.exports = {
 
 
       res.render('person',{username,results,visit_posts})
+      }
+      else{
+        res.render('user_doesnt_exist')
       }
       visit_posts=['Posts:']
     },
