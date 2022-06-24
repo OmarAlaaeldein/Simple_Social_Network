@@ -1,9 +1,24 @@
 <html>
       <head>
+        <%- include('header.ejs') %>
       </head>
+      <style>
+        .friend-comp{
+        background: linear-gradient(rgb(241, 240, 240), rgb(200,200,200));
+        padding: 10px;
+        margin: 15px;
+        border-radius: 12px;
+        box-shadow: 5px 5px 5px rgb(233, 233, 233);
+        transition: 0.3s ease;
+        background: linear-gradient(rgb(241, 240, 240), rgb(235, 233, 233));
+        }
+        .friend-comp:hover{
+        box-shadow: 8px 8px 8px rgb(184, 184, 184);
+        }
+      </style>
       <body>
 
-          <%- include('header.ejs') %>
+          <!-- <%- include('header.ejs') %> -->
           <img src="1.png" width="50" height="50"/>
           <h2>
             Hello, <%=username%>! <%=results%> 
@@ -36,7 +51,7 @@
           <div>
               <form name="search" method="POST" action="/search"> 
                   <label for="search">Search:</label>
-                  <input type="text" name="username" id="username" placeholder="username" />
+                  <input type="text" name="username" id="username" placeholder="What's the user's name?" />
                   <input type="submit" value="search" name="Search"/>
               </form>
           </div>
@@ -58,24 +73,23 @@
           <div>
             <form name="visit" method="POST" action="/visit"> 
                 <label for="visit">Visit:</label>
-                <input type="text" name="visit" id="visit" placeholder="visit" />
+                <input type="text" name="visit" id="visit" placeholder="What's the user's name?" />
                 <input type="submit" value="visit" name="Visit"/>
             </form>
         </div>
 
-        <h2>
+        <div class="friend-comp">
           <% for(var i=0; i<1; i++) {%>
              <%= my_posts[i] %>
              <br>
           <% } %>
-        </h2>
-
-        <ul>
-          <% for(var i=1; i<my_posts.length; i++) {%>
-             <li><%= my_posts[i] %></li>
-             <br>
-          <% } %>
-        </ul>
+              <ul>
+              <% for(var i=1; i<my_posts.length; i++) {%>
+                 <li><%= my_posts[i] %></li>
+                 <br>
+              <% } %>
+            </ul>
+          </div>
 
     </body>
 </html>

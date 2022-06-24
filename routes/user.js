@@ -17,4 +17,5 @@ router.get('/friends', userController.friends);
 // router.get('/unfollow', userController.unfollow);
 router.post('/search', userController.search);
 router.post('/visit', userController.visit);
+router.get('/myprofile', userController.profile);
 module.exports = router

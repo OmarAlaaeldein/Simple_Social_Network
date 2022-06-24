@@ -136,7 +136,17 @@ module.exports = {
     res.redirect('./hello');
     
     },
-  
+  profile: async (req, res) => {
+    var username = globuser;
+    let my_posts=['My Posts:'];
+    const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
+    const result = await sqlConn.promise().query(`SELECT follow from followers where username = '${username}'`);
+    // console.log(my_fetched_posts);
+    for (let i = 0; i < my_fetched_posts[0].length; i++) {
+      my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
+    }
+    res.render('myprofile',{username,my_posts,result});
+    },
   visit: async (req, res) => {
     var name=req.body.visit;
     var username=name;
