@@ -1,6 +1,5 @@
 const sqlConn = require('../databases/db');
 const crypto = require('crypto');
-const { use } = require('../routes/user');
 let globuser='';
 let search_results=[];
 let my_posts=['My Posts:'];
