@@ -1,6 +1,11 @@
 const sqlConn = require('../databases/db');
 const crypto = require('crypto');
 let globuser='';
+let search_results=[];
+let my_posts=['My Posts:'];
+let visit_posts=['Posts:'];
+
+
 module.exports = {
   login: (req, res) => {
     var cookie = req.cookies.loggedin;
@@ -13,11 +18,20 @@ module.exports = {
     }
   },
 
-  hello: (req, res) => {
+  hello: async (req, res) => {
     let username='';
     let results='';
     if(!username)username=globuser;
-    res.render('hello',{username,results})
+    
+    let my_posts=['My Posts:'];
+    const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
+    // console.log(my_fetched_posts);
+    for (let i = 0; i < my_fetched_posts[0].length; i++) {
+      my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
+    }
+    
+    res.render('hello',{username,results,search_results,my_posts})
+    search_results=[];
   },
   
   
@@ -37,7 +51,7 @@ module.exports = {
     }
   },
 
-  getPage: (req, res) => {
+  getPage: async (req, res) => {
     let username = req.body.username;
     let results= ' ';
     if (username!=undefined && username!='')
@@ -46,58 +60,99 @@ module.exports = {
     // console.log('username:',username,'.')
     if(req.cookies.loggedin == "true") {
       if(!username)username=globuser;
-        
-        res.render('hello', {username,results})
+        let my_posts=['My Posts:'];
+        const my_fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${username}' order by datetime DESC`);
+        for (let i = 0; i < my_fetched_posts[0].length; i++) {
+          my_posts.push(my_fetched_posts[0][i]['datetime']+', '+my_fetched_posts[0][i]['username']+':   '+my_fetched_posts[0][i]['post']);
+        }
+        res.render('hello', {username,results,search_results,my_posts})
     }
     res.redirect('./login');
   },
   
   newpost: (req, res) => {
-    let options = {
-      maxAge: 1000 * 60 * 2/1000,
-      httpOnly: true
-    }
+    
     var results='';
     var post_text=req.body.post_text;
     var username=globuser;
-    sqlConn.promise().query(`insert into posts (username, post) values ('${globuser}' ,'${post_text}');`);
-    res.render('hello',{username,results})
+    sqlConn.promise().query(`insert into posts (username, post, datetime) values ('${globuser}' ,'${post_text}',NOW());`);
+    // res.render('hello',{username,results,search_results,my_posts})
+    res.redirect('./hello');
     },
   follow: (req, res) => {
-      let options = {
-        maxAge: 1000 * 60 * 2/1000,
-        httpOnly: true
-      }
+      
       var results='';
       var followee_name=req.body.followee_name;
       var username=globuser;
       sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}');`);
       console.log(globuser,'followed',followee_name);
-      res.render('hello',{username,results})
+      // res.render('hello',{username,results,search_results,my_posts}
+      res.redirect('./hello');
       },
   unfollow: (req, res) => {
-      let options = {
-        maxAge: 1000 * 60 * 2/1000,
-        httpOnly: true
-      }
+      
       var results='';
       var followee_name=req.body.followee_name;
       var username=globuser;
       sqlConn.promise().query(`DELETE FROM followers WHERE username=('${globuser}') and follow=('${followee_name}');`);
       console.log(globuser,'unfollowed',followee_name);
-      res.render('hello',{username,results})
+      // res.render('hello',{username,results,search_results,my_posts})
+      res.redirect('./hello');
       },
   friends: async (req, res) => {
-      let options = {
-        maxAge: 1000 * 60 * 2/1000,
-        httpOnly: true
-      }
       var username=globuser;
       var title='These are your friends, ';
       const result = await sqlConn.promise().query(`SELECT follow from followers where username = '${username}'`);
       console.log(globuser+"'s friends are",result[0]);
       res.render('friends',{username,title,result})
       },
+
+
+  search: async (req, res) => {
+    var name=req.body.username;
+    var username=globuser;
+    var results='';
+    
+    const result = await sqlConn.promise().query(`SELECT username from accounts where username LIKE '%${name}%'`);
+        
+    // console.log(result)
+    search_results.push('Search results:')
+    for (let i = 0; i < result[0].length; i++) {
+      search_results.push(result[0][i]['username']);
+    }
+
+    console.log(search_results)
+    // res.render('hello',{username,results,search_results,my_posts})
+    res.redirect('./hello');
+    
+    },
+  
+  visit: async (req, res) => {
+    var name=req.body.visit;
+    var username=globuser;
+    var results='';
+    
+    const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${name}'`);
+    
+    // console.log(result)
+    const fetched_posts = await sqlConn.promise().query(`SELECT username,post,datetime from posts where username = '${name}' order by datetime DESC`);
+    
+
+
+
+    if(result){
+      // console.log(fetched_posts[0]);
+      for (let i = 0; i < fetched_posts[0].length; i++) {
+        visit_posts.push(fetched_posts[0][i]['datetime']+', '+fetched_posts[0][i]['username']+':   '+fetched_posts[0][i]['post']);
+      }
+
+
+      res.render('person',{username,results,visit_posts})
+      }
+      visit_posts=['Posts:']
+    },
+
+
   auth: async (req, res) => {
 
     let username = req.body.username;
@@ -128,7 +183,8 @@ module.exports = {
         sqlConn.promise().query(`insert into accounts (username, password) values ('${username}' ,'${password}');`)
         console.log("new user added");
         results='\nwelcome new user'
-        res.render('hello', {username,results})
+        // res.render('hello', {username,results,search_results,my_posts})
+        res.redirect('./hello');
         
       }
 
@@ -138,14 +194,15 @@ module.exports = {
       if (result[0][0]){
         if(username && password && result[0][0]['password'] === password){
           let options = {
-            maxAge: 1000 * 60 * 2,
+            maxAge: 1000 * 60 * 2/1000,
             httpOnly: true
           }
           if(!req.cookie)
           res.cookie("loggedin", "true", options);
           let username = req.body.username;
           let results= ' ';
-          res.render('hello', {username,results})
+          // res.render('hello', {username,results,search_results,my_posts})
+          res.redirect('./hello');
         }else{
           
           res.send(401);

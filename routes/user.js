@@ -14,4 +14,7 @@ router.post('/follow', userController.follow);
 router.post('/unfollow', userController.unfollow);
 router.get('/unfollow', userController.unfollow);
 router.get('/friends', userController.friends);
+// router.get('/unfollow', userController.unfollow);
+router.post('/search', userController.search);
+router.post('/visit', userController.visit);
 module.exports = router
