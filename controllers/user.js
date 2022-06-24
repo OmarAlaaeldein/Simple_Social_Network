@@ -68,20 +68,7 @@ module.exports = {
     let results= ' ';
     if (username!=undefined && username!='')
       globuser=username;
-    console.log(globuser);
-    
-    
-    // const xx = await sqlConn.promise().query(`select a.follow from followers a,followers b where a.username='${globuser}' and '${globuser}'=b.follow and a.follow=b.username and a.username!=a.follow`);
-    // const xxx = await sqlConn.promise().query(`select username from followers where follow='${globuser}' and follow not in (select a.follow from followers a,followers b where a.username='${globuser}' and '${globuser}'=b.follow and a.follow=b.username and a.username!=a.follow)`);
-    
-    // let xx2=[]
-    // let xxx2=[]
-    // for (let i = 0; i < xx[0].length; i++){xx2.push(xx[0][i]['follow'])}
-    // for (let i = 0; i < xxx[0].length; i++){xxx2.push(xxx[0][i]['username'])}
-    // for (let i = 0; i < xxx2.length; i++) {if(!(xxx2[i] in xx2)){notif++;}}
-
-
-    
+    console.log(globuser);    
     if(req.cookies.loggedin == "true") {
       if(!username)username=globuser;
         let my_posts=['My Posts:'];
