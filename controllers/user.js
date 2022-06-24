@@ -129,7 +129,7 @@ module.exports = {
   
   visit: async (req, res) => {
     var name=req.body.visit;
-    var username=globuser;
+    var username=name;
     var results='';
     
     const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${name}'`);
@@ -143,6 +143,7 @@ module.exports = {
     if(result){
       // console.log(fetched_posts[0]);
       for (let i = 0; i < fetched_posts[0].length; i++) {
+
         visit_posts.push(fetched_posts[0][i]['datetime']+', '+fetched_posts[0][i]['username']+':   '+fetched_posts[0][i]['post']);
       }
 
