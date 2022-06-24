@@ -79,15 +79,25 @@ module.exports = {
     // res.render('hello',{username,results,search_results,my_posts})
     res.redirect('./hello');
     },
-  follow: (req, res) => {
+  follow: async (req, res) => {
       
       var results='';
       var followee_name=req.body.followee_name;
       var username=globuser;
-      sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}'), where;`);
-      console.log(globuser,'followed',followee_name);
+      
+      const result = await sqlConn.promise().query(`SELECT username from accounts where username = '${followee_name}';`);
+      if(result[0].length!=0){
+        // console.log(fetched_posts[0]);
+        // console.log(result[0])
+        sqlConn.promise().query(`insert into followers (username, follow) values ('${globuser}' ,'${followee_name}');`);
+        console.log(globuser,'followed',followee_name);
+        res.redirect('./hello');
+      }
+      else{
+        res.render('user_doesnt_exist');
+      }
       // res.render('hello',{username,results,search_results,my_posts}
-      res.redirect('./hello');
+      
       },
   unfollow: (req, res) => {
       
