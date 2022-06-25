@@ -7,7 +7,7 @@ A website that functions a simple social network using JS and MySQL
 1. Clone the following [repository](https://github.com/OmarAlaaeldein/Simple_Social_Network).
    
    ```
-   git clone https://github.com/Dawood0/Simple_Social_Network
+   git clone https://github.com/OmarAlaaeldein/Simple_Social_Network
    ```
 2. Configure MySQL credentials to match the host settings.
    
