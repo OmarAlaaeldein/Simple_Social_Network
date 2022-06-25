@@ -3,7 +3,7 @@ const mysql = require ('mysql2');
 const config = {
   host: 'localhost',
   user: 'root',
-  password: 'password',
+  password: '1234',
   database: 'network_mayo'
 };
 
