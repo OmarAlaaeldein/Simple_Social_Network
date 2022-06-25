@@ -1,6 +1,13 @@
 <html>
       <head>
         <%- include('header.ejs') %>
+<div>
+              <form name="search" method="POST" action="/search"> 
+                  <label for="search">Search:</label>
+                  <input type="text" name="username" id="username" placeholder="What's the user's name?" />
+                  <input type="submit" value="search" name="Search"/>
+              </form>
+          </div>
       </head>
       <style>
         .friend-comp{
@@ -48,13 +55,7 @@
               </form>
           </div>
 
-          <div>
-              <form name="search" method="POST" action="/search"> 
-                  <label for="search">Search:</label>
-                  <input type="text" name="username" id="username" placeholder="What's the user's name?" />
-                  <input type="submit" value="search" name="Search"/>
-              </form>
-          </div>
+          
             
           <h3>
             <% for(var i=0; i<1; i++) {%>
