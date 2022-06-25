@@ -1,6 +1,6 @@
 # Simple_Social_Network
 
-A website that functions a simple social network using JS and MySQL
+A website that functions as a simple social network using JS and MySQL
 
 ## How To Run the Website
 
