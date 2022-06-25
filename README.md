@@ -16,7 +16,7 @@ A website that functions as a simple social network using JS and MySQL
     |- databases
     | |- db.js
     ```
-3. Run the schema file to create an instace of the database used in website.
+3. Run the schema file to create an instance of the database used in website.
    
     ``` 
     Simple_Social_Network
