@@ -4,13 +4,13 @@ A website that functions as a simple social network using JS and MySQL
 
 ## How To Run the Website
 
-1. Clone the following [repository](https://github.com/OmarAlaaeldein/Simple_Social_Network).
+1. Clone the following [repository](https://github.com/OmarAlaaeldein/Simple_Social_Network)
 
    ```
    git clone https://github.com/OmarAlaaeldein/Simple_Social_Network
    ```
 
-2. Configure MySQL credentials to match the host settings.
+2. Configure MySQL credentials to match the host settings
 
     ```
     Simple_Social_Network
@@ -18,7 +18,7 @@ A website that functions as a simple social network using JS and MySQL
     | |- db.js
     ```
 
-3. Run the schema file to create an instance of the database used in website.
+3. Run the schema file to create an instance of the database used in website
 
     ```
     Simple_Social_Network
