@@ -1,11 +1,11 @@
 <html>
       <head>
         <%- include('header.ejs') %>
-<div>
+<div class="container">
               <form name="search" method="POST" action="/search"> 
-                  <label for="search">Search:</label>
+                  <label for="search"></label>
                   <input type="text" name="username" id="username" placeholder="What's the user's name?" />
-                  <input type="submit" value="search" name="Search"/>
+                  <input type="submit" value="Search" name="Search"/>
               </form>
           </div>
       </head>
@@ -22,6 +22,10 @@
         .friend-comp:hover{
         box-shadow: 8px 8px 8px rgb(184, 184, 184);
         }
+	.container {
+	display: flex;
+  	justify-content: center;
+	}
       </style>
       <body>
 
